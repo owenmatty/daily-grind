@@ -23,11 +23,15 @@ describe('renderLevel', () => {
   it('changes only movement difficulty between levels', () => {
     const orange = renderLevel(block, 2)
     const brown = renderLevel(block, 5)
-    expect(orange.lines.map((l) => l.text)).toEqual(['6 Back Squats @ 65%', 'Wallballs (6/4)'])
+    expect(orange.lines.map((l) => l.text)).toEqual(['6 Back Squats @ 65%', 'Wallballs (6/3)'])
     expect(brown.lines.map((l) => l.text)).toEqual(['3 Back Squats @ 88%', 'Wallballs (12/9)'])
     expect(orange.lines.map((l) => l.movementId)).toEqual(brown.lines.map((l) => l.movementId))
   })
   it('exposes the bare movement name for demo searches', () => {
     expect(renderLevel(block, 2).lines[0].demo).toBe('Back Squats')
+  })
+  it('puts a line prefix before the amount', () => {
+    const b = { lines: [{ movementId: 'run', base: 800, prefix: 'Buy-in: ' }, { movementId: 'burpee', base: null, prefix: 'AMRAP ' }] }
+    expect(renderLevel(b, 3).lines.map((l) => l.text)).toEqual(['Buy-in: 800m Run', 'AMRAP Burpees over DB'])
   })
 })

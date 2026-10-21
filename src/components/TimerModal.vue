@@ -16,7 +16,7 @@ let wakeLock = null
 let prev = timerState(props.timer, 0)
 
 const state = computed(() => timerState(props.timer, elapsed.value))
-const modeLabel = { interval: 'Interval', amrap: 'AMRAP', fortime: 'For Time' }[props.timer.mode]
+const modeLabel = { interval: 'Interval', amrap: 'AMRAP', fortime: 'For Time', workrest: 'Work / Rest' }[props.timer.mode]
 
 function update() {
   elapsed.value = banked + (Date.now() - startedAt) / 1000
@@ -24,6 +24,7 @@ function update() {
   if (s.phase === 'ready' && s.display !== prev.display && ['00:03', '00:02', '00:01'].includes(s.display)) beep(660, 120)
   if (s.phase === 'work' && prev.phase === 'ready') beep(990, 400)
   else if (s.phase === 'work' && s.round !== prev.round) beep(990, 300)
+  else if (s.phase === 'rest' && prev.phase === 'work') beep(660, 300)
   if (s.done && !prev.done) {
     beep(520, 700)
     pause()
@@ -61,9 +62,9 @@ onBeforeUnmount(pause)
 <template>
   <Modal :title="`${title} — ${modeLabel}`" @close="$emit('close')">
     <div class="timer" :class="state.phase">
-      <p class="phase">{{ state.phase === 'ready' ? 'Get ready' : state.done ? 'Time!' : modeLabel }}</p>
+      <p class="phase">{{ state.phase === 'ready' ? 'Get ready' : state.done ? 'Time!' : state.phase === 'rest' ? 'Rest' : modeLabel }}</p>
       <p class="clock">{{ state.display }}</p>
-      <p v-if="timer.mode === 'interval' && state.round" class="round">Round {{ state.round }} / {{ timer.rounds }}</p>
+      <p v-if="timer.rounds && state.round" class="round">Round {{ state.round }} / {{ timer.rounds }}</p>
       <div class="controls">
         <button v-if="!running && !state.done" class="btn" @click="start">{{ elapsed ? 'Resume' : 'Start' }}</button>
         <button v-if="running" class="btn" @click="pause">Pause</button>
@@ -77,7 +78,7 @@ onBeforeUnmount(pause)
 .timer { text-align: center; padding: 12px 0; }
 .phase { color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 0; }
 .clock { font-size: 72px; font-weight: 800; font-variant-numeric: tabular-nums; margin: 8px 0; }
-.ready .clock { color: var(--accent); }
+.ready .clock, .rest .clock { color: var(--accent); }
 .round { font-size: 20px; margin: 0 0 8px; }
 .controls { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
 </style>

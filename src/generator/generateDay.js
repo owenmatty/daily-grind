@@ -16,7 +16,11 @@ export function generateDay(iso) {
   const a = buildStrength(rng, focus)
   const mainPattern = getMovement(a.lines[0].movementId).pattern
   const used = new Set(a.lines.map((l) => l.movementId))
-  const pick = (count, filter) => takeMovements(rng, count, mainPattern, used, filter)
+  const pick = (count, filter) => {
+    const picked = takeMovements(rng, count, mainPattern, used, filter)
+    picked.forEach((m) => used.add(m.id))
+    return picked
+  }
 
   const cond = rng.pick(CONDITIONING_BUILDERS)(rng, pick)
   const tags = [...new Set(cond.lines.flatMap((l) => getMovement(l.movementId).tags))]

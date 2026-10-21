@@ -40,7 +40,7 @@ function setLevel(i) {
         <p v-for="h in block.heading.slice(1)" :key="h" class="sub">{{ h }}</p>
         <template v-if="block.kind === 'strength'">
           <template v-for="(line, i) in view.lines" :key="line.movementId">
-            <p v-if="i > 0" class="plus">+</p>
+            <p v-if="i > 0 && !block.alt" class="plus">+</p>
             <p>{{ line.text }}</p>
           </template>
         </template>

@@ -17,12 +17,12 @@ export function amountText(movement, base, scale) {
 
 export function renderLevel(block, level) {
   return {
-    lines: block.lines.map(({ movementId, base }) => {
+    lines: block.lines.map(({ movementId, base, prefix = '' }) => {
       const m = getMovement(movementId)
       const variant = m.levels[level]
       const name = variant.load ? `${variant.name} ${variant.load}` : variant.name
       const amount = amountText(m, base, variant.scale)
-      return { movementId, name, demo: variant.name, text: amount ? `${amount} ${name}` : name }
+      return { movementId, name, demo: variant.name, text: prefix + (amount ? `${amount} ${name}` : name) }
     }),
   }
 }

@@ -16,6 +16,14 @@ export function timerState(config, elapsed) {
     const round = Math.floor(t / config.interval) + 1
     return { phase: 'work', display: formatClock(Math.ceil(config.interval - (t % config.interval))), round, done: false }
   }
+  if (config.mode === 'workrest') {
+    const cycle = config.work + config.rest
+    if (t >= cycle * config.rounds - config.rest) return { phase: 'done', display: '00:00', round: config.rounds, done: true }
+    const round = Math.floor(t / cycle) + 1
+    const inCycle = t % cycle
+    if (inCycle < config.work) return { phase: 'work', display: formatClock(Math.ceil(config.work - inCycle)), round, done: false }
+    return { phase: 'rest', display: formatClock(Math.ceil(cycle - inCycle)), round, done: false }
+  }
   if (config.mode === 'amrap') {
     const remaining = config.duration - t
     if (remaining <= 0) return { phase: 'done', display: '00:00', round: 0, done: true }

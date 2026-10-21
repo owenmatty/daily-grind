@@ -27,4 +27,11 @@ describe('timer', () => {
     expect(timerState(c, at(75)).display).toBe('01:15')
     expect(timerState(c, at(900))).toMatchObject({ done: true, display: '15:00' })
   })
+  it('work/rest mode alternates and counts rounds', () => {
+    const c = { mode: 'workrest', work: 20, rest: 10, rounds: 8 }
+    expect(timerState(c, at(0))).toMatchObject({ phase: 'work', round: 1, display: '00:20' })
+    expect(timerState(c, at(25))).toMatchObject({ phase: 'rest', round: 1, display: '00:05' })
+    expect(timerState(c, at(31))).toMatchObject({ phase: 'work', round: 2, display: '00:19' })
+    expect(timerState(c, at(230))).toMatchObject({ done: true })
+  })
 })

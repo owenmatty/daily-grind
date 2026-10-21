@@ -1,8 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import LevelPicker from './LevelPicker.vue'
 import { LEVELS } from '../lib/levels.js'
-import TimerModal from './TimerModal.vue'
+import TimerDock from './TimerDock.vue'
+import { activeTimer } from '../lib/activeTimer.js'
 import ScoreModal from './ScoreModal.vue'
 import DemoModal from './DemoModal.vue'
 
@@ -11,7 +12,16 @@ const emit = defineEmits(['level'])
 
 const level = ref(props.initialLevel)
 const view = computed(() => props.block.levels[level.value])
-const open = ref(null) // 'timer' | 'score' | 'demo' | null
+const open = ref(null) // 'score' | 'demo' | null
+const card = ref(null)
+const timerKey = computed(() => props.date + '-' + props.block.id)
+
+// Open the docked timer and lift this card to the top so the workout stays in view above it.
+async function openTimer() {
+  activeTimer.value = timerKey.value
+  await nextTick() // dock is mounted and has reserved its space at the bottom of the page
+  card.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 function setLevel(i) {
   level.value = i
@@ -20,7 +30,7 @@ function setLevel(i) {
 </script>
 
 <template>
-  <article class="card" :style="{ '--level': LEVELS[level].color }">
+  <article ref="card" class="card" :style="{ '--level': LEVELS[level].color }">
     <div class="body">
       <header>
         <h2>{{ block.title }}</h2>
@@ -59,14 +69,14 @@ function setLevel(i) {
       <button class="icon-btn" aria-label="Movement demos" @click="open = 'demo'">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2" /><path d="M16 10l6-3v10l-6-3z" /></svg>
       </button>
-      <button class="icon-btn" aria-label="Timer" @click="open = 'timer'">
+      <button class="icon-btn" aria-label="Timer" @click="openTimer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
       </button>
       <span class="spacer" />
       <button class="btn" @click="open = 'score'">✎ Chalk It!</button>
     </footer>
 
-    <TimerModal v-if="open === 'timer'" :title="block.title" :timer="block.timer" @close="open = null" />
+    <TimerDock v-if="activeTimer === timerKey" :key="timerKey" :title="block.title" :timer="block.timer" @close="activeTimer = null" />
     <ScoreModal v-if="open === 'score'" :block="block" :date="date" :level="level" @close="open = null" />
     <DemoModal v-if="open === 'demo'" :title="block.title" :lines="view.lines" @close="open = null" />
   </article>

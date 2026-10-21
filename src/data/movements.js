@@ -28,7 +28,7 @@ export const MOVEMENTS = [
   { id: 'rdl', roles: ['main'], building: true, focus: 'hinge', title: 'Hinge', pattern: 'hinge', tags: ['Posterior Chain'], unit: 'reps', base: 8, sec: 3,
     levels: [v('KB RDLs', 1.25, '(16/12)'), v('DB RDLs', 1, '(2x15/10)'), v('Romanian Deadlifts'), v('Romanian Deadlifts', 0.85), v('Romanian Deadlifts', 0.67), v('Romanian Deadlifts', 0.65)] },
   { id: 'muscle_up', roles: ['main'], focus: 'gymnastics', title: 'Gymnastics', repCap: 5, pattern: 'pull', tags: ['Gymnastics', 'Upper Body Pull'], unit: 'reps', base: 4, sec: 5,
-    levels: [v('Hollow-to-Arch Swings', 2), v('Jumping Chest-to-Bar'), v('Chest-to-Bar Pull-ups'), v('Banded Bar Muscle-ups'), v('Bar Muscle-ups'), v('Ring Muscle-ups')] },
+    levels: [v('Hollow-to-Arch Swings', 2), v('Jumping Pull-ups'), v('Jumping Chest-to-Bar'), v('Chest-to-Bar Pull-ups'), v('Bar Muscle-ups'), v('Ring Muscle-ups')] },
 
   { id: 'bench_press', roles: ['main'], building: true, focus: 'press', title: 'Bench Press', pattern: 'press', tags: ['Upper Body Push'], unit: 'reps', base: 6, sec: 3,
     levels: [v('DB Floor Press', 1.25, '(2x10/7.5)'), v('DB Bench Press', 1, '(2x15/10)'), v('Bench Press'), v('Bench Press', 0.67), v('Bench Press', 0.6), v('Bench Press', 0.5)] },

@@ -39,6 +39,15 @@ describe('conditioning builders', () => {
       expect(b.energy).toBeTruthy()
     }
   })
+  it('chipper is an AMRAP down the list, finishing on an AMRAP movement', () => {
+    const build = CONDITIONING_BUILDERS.find((b) => b.name === 'chipper')
+    for (let i = 0; i < 50; i++) {
+      const rng = createRng(`chip${i}`)
+      const b = build(rng, (n, f) => takeMovements(rng, n, 'press', new Set(), f))
+      expect(b.timer.mode).toBe('amrap')
+      expect(b.lines.at(-1)).toMatchObject({ base: null, prefix: 'AMRAP ' })
+    }
+  })
   it('includes the new album formats', () => {
     const names = CONDITIONING_BUILDERS.map((b) => b.name)
     for (const n of ['chipper', 'buyInRounds', 'workRest', 'tabata']) expect(names).toContain(n)

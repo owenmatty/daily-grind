@@ -25,6 +25,8 @@ describe('generateDay', () => {
         b.levels.forEach((lvl) => expect(lvl.lines.map((l) => l.movementId)).toEqual(b.lines.map((l) => l.movementId)))
       }
       expect(day.blocks[1].title).toBeTruthy()
+      // Solo site: no partner workouts
+      expect(JSON.stringify(day), iso).not.toMatch(/partner|pairs|synch/i)
       expect(day.blocks[1].tags.length).toBeGreaterThan(0)
     }
   })

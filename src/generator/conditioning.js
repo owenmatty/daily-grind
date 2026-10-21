@@ -146,19 +146,30 @@ export const CONDITIONING_BUILDERS = [
     }
   },
   function chipper(rng, pick) {
-    const moves = pick(rng.int(5, 6))
-    const factors = [5, 4, 3.5, 3, 2, 1.5]
+    // As in the gym app: an AMRAP worked down a descending list, finishing on AMRAP of the last movement.
+    const minutes = rng.int(18, 22)
+    const moves = pick(rng.int(4, 5))
+    const [finisher] = pick(1, (m) => m.unit === 'reps')
+    // Counts step down the list; slow movements (devils press, wall walks) get fewer, calories and distances keep their own scale.
+    const targets = [50, 40, 30, 25, 20]
     const roundTo = (n) => (n >= 20 ? Math.round(n / 5) * 5 : Math.round(n))
-    const lines = moves.map((m, i) => ({ movementId: m.id, base: roundTo(m.base * factors[i]) }))
-    const est = lines.reduce((t, l, i) => t + l.base * moves[i].sec, 0)
-    const cap = Math.max(15, Math.ceil((est * 1.4) / 60))
+    const amount = (m, i) => {
+      if (m.unit === 'm' || m.unit === 's') return m.base * (1.5 - i * 0.2)
+      if (m.unit === 'cal') return roundTo(targets[i])
+      return roundTo(targets[i] * Math.min(1, Math.max(0.15, 2.5 / m.sec)))
+    }
+    // Quick movements first so the counts step down the list.
+    const ordered = [...moves].sort((a, b) => a.sec - b.sec)
     return {
-      heading: [`For Time – ${cap} min CAP`, 'Chipper'],
-      lines,
-      note: null,
-      goal: `<${Math.ceil(est / 60)}:00`,
+      heading: ['AMRAP', `${minutes} minutes`, 'Chipper'],
+      lines: [
+        ...ordered.map((m, i) => ({ movementId: m.id, base: amount(m, i) })),
+        { movementId: finisher.id, base: null, prefix: 'AMRAP ' },
+      ],
+      note: 'Work down the list – score is where you finish',
+      goal: 'Reach the AMRAP',
       energy: HEAVY,
-      timer: { mode: 'fortime', cap: cap * 60 },
+      timer: { mode: 'amrap', duration: minutes * 60 },
     }
   },
   function buyInRounds(rng, pick) {

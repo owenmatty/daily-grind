@@ -67,7 +67,7 @@ function setLevel(i) {
     </footer>
 
     <TimerModal v-if="open === 'timer'" :title="block.title" :timer="block.timer" @close="open = null" />
-    <ScoreModal v-if="open === 'score'" :title="block.title" :date="date" :block-id="block.id" :level="level" @close="open = null" />
+    <ScoreModal v-if="open === 'score'" :block="block" :date="date" :level="level" @close="open = null" />
     <DemoModal v-if="open === 'demo'" :title="block.title" :lines="view.lines" @close="open = null" />
   </article>
 </template>

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { loadLevel, saveLevel, loadScores, addScore, storageAvailable } from '../src/lib/storage.js'
+import { loadLevel, saveLevel, loadScores, addScore, allScores, deleteScore, storageAvailable } from '../src/lib/storage.js'
 
 function memoryStorage() {
   const data = new Map()
@@ -27,6 +27,20 @@ describe('storage', () => {
     addScore('2026-10-21', 'B', { score: '7', level: 3, notes: '', at: 2 })
     expect(loadScores('2026-10-21', 'B').map((s) => s.score)).toEqual(['6+3', '7'])
     expect(loadScores('2026-10-21', 'A')).toEqual([])
+  })
+  it('lists all scores newest first and deletes one', () => {
+    addScore('2026-10-20', 'A', { score: '80kg', at: 1 })
+    addScore('2026-10-21', 'B', { score: '6+3', at: 3 })
+    addScore('2026-10-21', 'B', { score: '7', at: 2 })
+    expect(allScores().map((s) => [s.date, s.blockId, s.score])).toEqual([
+      ['2026-10-21', 'B', '6+3'],
+      ['2026-10-21', 'B', '7'],
+      ['2026-10-20', 'A', '80kg'],
+    ])
+    deleteScore('2026-10-21', 'B', 3)
+    expect(allScores().map((s) => s.score)).toEqual(['7', '80kg'])
+    deleteScore('2026-10-20', 'A', 1)
+    expect(loadScores('2026-10-20', 'A')).toEqual([])
   })
   it('survives a broken localStorage', () => {
     globalThis.localStorage = { getItem() { throw new Error('no') }, setItem() { throw new Error('no') }, removeItem() {} }

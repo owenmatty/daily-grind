@@ -45,6 +45,7 @@ export function buildStrength(rng, focus) {
     note: null,
     alt: Boolean(t.alt),
     building: Boolean(main.building),
+    weighted: Boolean(main.weighted),
     lines,
     timer: { mode: 'interval', interval: t.interval, rounds: t.rounds },
   }

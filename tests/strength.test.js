@@ -17,6 +17,7 @@ describe('strength block', () => {
       const main = getMovement(b.lines[0].movementId)
       expect(main.focus).toBe(focus)
       expect(b.title).toBe(main.title)
+      expect(b.weighted).toBe(Boolean(main.weighted))
       expect(b.timer.mode).toBe('interval')
       expect(b.lines[0].base).toBeLessThanOrEqual(main.repCap ?? 99)
       const accPatterns = b.lines.slice(1).map((l) => getMovement(l.movementId).pattern)

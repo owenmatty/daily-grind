@@ -45,6 +45,23 @@ export function loadScores(date, blockId) {
   return read(SCORES_KEY, {})[scoreKey(date, blockId)] ?? []
 }
 
+export function allScores() {
+  return Object.entries(read(SCORES_KEY, {}))
+    .flatMap(([key, entries]) => {
+      const [date, blockId] = key.split('|')
+      return entries.map((e) => ({ ...e, date, blockId }))
+    })
+    .sort((a, b) => b.at - a.at)
+}
+
+export function deleteScore(date, blockId, at) {
+  const all = read(SCORES_KEY, {})
+  const key = scoreKey(date, blockId)
+  all[key] = (all[key] ?? []).filter((e) => e.at !== at)
+  if (!all[key].length) delete all[key]
+  return write(SCORES_KEY, all)
+}
+
 export function addScore(date, blockId, entry) {
   const all = read(SCORES_KEY, {})
   const key = scoreKey(date, blockId)

@@ -17,11 +17,13 @@ defineEmits(['update:modelValue'])
       :class="{ active: modelValue === i }"
       @click="$emit('update:modelValue', i)"
     />
+    <span class="label">{{ LEVELS[modelValue].label }}</span>
   </div>
 </template>
 
 <style scoped>
-.levels { display: flex; gap: 14px; margin: 18px 0 8px; }
-.dot { width: 38px; height: 38px; border-radius: 50%; border: 2px solid rgba(0, 0, 0, 0.35); position: relative; padding: 0; }
-.dot.active::after { content: ''; position: absolute; left: -2px; right: -2px; bottom: -12px; height: 3px; background: var(--select); border-radius: 2px; }
+.levels { display: flex; align-items: center; gap: 12px; margin: 18px 0 8px; flex-wrap: wrap; }
+.dot { width: 34px; height: 34px; border-radius: 50%; border: 0; padding: 0; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.28); transition: transform 0.15s; }
+.dot.active { transform: scale(1.15); outline: 2.5px solid var(--text); outline-offset: 3px; }
+.label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-left: 4px; }
 </style>

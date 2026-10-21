@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import LevelPicker from './LevelPicker.vue'
+import { LEVELS } from '../lib/levels.js'
 import TimerModal from './TimerModal.vue'
 import ScoreModal from './ScoreModal.vue'
 import DemoModal from './DemoModal.vue'
@@ -19,7 +20,7 @@ function setLevel(i) {
 </script>
 
 <template>
-  <article class="card">
+  <article class="card" :style="{ '--level': LEVELS[level].color }">
     <div class="body">
       <header>
         <h2>{{ block.title }}</h2>
@@ -72,7 +73,7 @@ function setLevel(i) {
 </template>
 
 <style scoped>
-.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+.card { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--level); border-radius: 14px; margin-bottom: 16px; overflow: hidden; transition: border-color 0.2s; }
 .body { padding: 18px 18px 14px; }
 header { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
 h2 { margin: 0; font-size: 20px; }
@@ -88,7 +89,7 @@ h2 { margin: 0; font-size: 20px; }
 .building { font-style: italic; color: var(--muted); }
 .note { font-style: italic; margin-top: 12px !important; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-.tags span { background: var(--accent); color: #111; border-radius: 6px; padding: 3px 8px; font-size: 13px; }
+.tags span { border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 2px 10px; font-size: 12px; }
 footer { display: flex; align-items: center; gap: 8px; padding: 12px 18px; border-top: 1px solid var(--line); }
 .spacer { flex: 1; }
 </style>

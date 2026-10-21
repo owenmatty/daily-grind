@@ -1,13 +1,13 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { generateDay } from './generator/generateDay.js'
-import { toISODate, addDays } from './lib/dates.js'
+import { toISODate, addDays, rollover } from './lib/dates.js'
 import { loadLevel, saveLevel } from './lib/storage.js'
 import DayNav from './components/DayNav.vue'
 import BlockCard from './components/BlockCard.vue'
 
-const today = toISODate(new Date())
-const date = ref(today)
+const today = ref(toISODate(new Date()))
+const date = ref(today.value)
 const day = computed(() => generateDay(date.value))
 const preferredLevel = ref(loadLevel())
 
@@ -15,6 +15,23 @@ function onLevel(i) {
   preferredLevel.value = i
   saveLevel(i)
 }
+
+// Switch to the new day's workout at midnight, and when a backgrounded phone tab comes back.
+function checkDate() {
+  const next = rollover(date.value, today.value, toISODate(new Date()))
+  today.value = next.today
+  date.value = next.date
+}
+
+let clock = null
+onMounted(() => {
+  clock = setInterval(checkDate, 30000)
+  document.addEventListener('visibilitychange', checkDate)
+})
+onBeforeUnmount(() => {
+  clearInterval(clock)
+  document.removeEventListener('visibilitychange', checkDate)
+})
 </script>
 
 <template>

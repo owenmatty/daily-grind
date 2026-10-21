@@ -23,3 +23,8 @@ export function dayNumber(iso) {
 export function formatLong(iso) {
   return parseISODate(iso).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 }
+
+// When the calendar day changes, follow it only if the user was looking at "today".
+export function rollover(viewed, previousToday, now) {
+  return { today: now, date: viewed === previousToday ? now : viewed }
+}

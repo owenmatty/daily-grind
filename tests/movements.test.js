@@ -21,6 +21,9 @@ describe('movement library', () => {
     expect(m.sec).toBeGreaterThan(0)
     expect(m.roles.length).toBeGreaterThan(0)
   })
+  it('never uses percentages (the gym app builds weight instead)', () => {
+    for (const m of MOVEMENTS) for (const v of m.levels) expect(v.load, m.id).not.toMatch(/%/)
+  })
   it('every focus has a main lift with a title', () => {
     for (const f of FOCI) {
       const mains = MOVEMENTS.filter((m) => m.roles.includes('main') && m.focus === f)

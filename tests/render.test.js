@@ -23,8 +23,8 @@ describe('renderLevel', () => {
   it('changes only movement difficulty between levels', () => {
     const orange = renderLevel(block, 2)
     const brown = renderLevel(block, 5)
-    expect(orange.lines.map((l) => l.text)).toEqual(['6 Back Squats @ 65%', 'Wallballs (6/3)'])
-    expect(brown.lines.map((l) => l.text)).toEqual(['3 Back Squats @ 88%', 'Wallballs (12/9)'])
+    expect(orange.lines.map((l) => l.text)).toEqual(['6 Back Squats', 'Wallballs (6/3)'])
+    expect(brown.lines.map((l) => l.text)).toEqual(['3 Back Squats', 'Wallballs (12/9)'])
     expect(orange.lines.map((l) => l.movementId)).toEqual(brown.lines.map((l) => l.movementId))
   })
   it('exposes the bare movement name for demo searches', () => {

@@ -42,6 +42,7 @@ function setLevel(i) {
           <template v-for="(line, i) in view.lines" :key="line.movementId">
             <p v-if="i > 0 && !block.alt" class="plus">+</p>
             <p>{{ line.text }}</p>
+            <p v-if="i === 0 && block.building" class="building">Building</p>
           </template>
         </template>
         <p v-else v-for="line in view.lines" :key="line.movementId">• {{ line.text }}</p>
@@ -84,6 +85,7 @@ h2 { margin: 0; font-size: 20px; }
 .heading { font-weight: 800; font-style: italic; text-decoration: underline; }
 .sub { font-weight: 800; font-style: italic; }
 .plus { font-weight: 700; }
+.building { font-style: italic; color: var(--muted); }
 .note { font-style: italic; margin-top: 12px !important; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
 .tags span { background: var(--accent); color: #111; border-radius: 6px; padding: 3px 8px; font-size: 13px; }

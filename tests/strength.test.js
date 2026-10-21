@@ -23,6 +23,11 @@ describe('strength block', () => {
       expect(accPatterns).not.toContain(main.pattern)
       expect(new Set(accPatterns).size).toBe(accPatterns.length)
       expect(b.lines.length).toBeLessThanOrEqual(3)
+      if (focus === 'olympic') {
+        expect(b.timer).toMatchObject({ interval: 60, rounds: 10 })
+      } else {
+        expect(b.lines[0].base).toBeGreaterThanOrEqual(Math.min(5, main.repCap ?? 99))
+      }
     }
   })
 })
